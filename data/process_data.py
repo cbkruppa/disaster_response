@@ -59,6 +59,9 @@ def clean_data(df):
         # convert column from string to numeric
         categories[column] = categories[column].astype(int)
         
+        # convert column to binary by setting all non-zero values to one
+        categories[column] = categories[column].apply(lambda x: 0 if x == 0 else 1)
+
     # Replace categories column in df with new category columns.
     # drop the original categories column from `df`
     df.drop('categories', inplace=True, axis=1)
@@ -84,7 +87,7 @@ def save_data(df, database_filename):
     """
     
     engine = create_engine('sqlite:///' + database_filename)
-    df.to_sql('MessagesCategories', engine, index=False)  
+    df.to_sql('MessagesCategories', engine, index=False, if_exists='replace')  
 
 
 def main():
